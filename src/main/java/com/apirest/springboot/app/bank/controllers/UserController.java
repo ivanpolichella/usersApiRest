@@ -105,6 +105,9 @@ public class UserController {
 		
 		if((user.getEmail() != null) && (!userToMod.getEmail().equals(user.getEmail())) )
 			userToMod.setEmail(user.getEmail());
+		
+		if((user.getPhones()) != null && (!userToMod.getPhones().equals(user.getPhones())) )
+			userToMod.setPhones(user.getPhones());
 	
 		return userToMod;
 	}

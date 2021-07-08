@@ -27,7 +27,8 @@ public class UserServiceImpl implements UserServiceInterface {
 	@Override
 	@Transactional(readOnly = true)
 	public User findForEmail(String email) {
-		return userdao.findForEmail(email);
+		User resultado = userdao.findForEmail(email);
+		return resultado;
 	}
 
 	@Override
