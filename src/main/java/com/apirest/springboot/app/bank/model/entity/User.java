@@ -19,6 +19,7 @@ import javax.persistence.TemporalType;
 @Entity
 @Table(name = "users")
 public class User {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Column(name="id", insertable = false, updatable = false, nullable = false)
@@ -94,6 +95,19 @@ public class User {
 	}
 	public void setEnabled(Long enabled) {
 		this.enabled = enabled;
+	}
+	
+	public User(String name, String email, String password, Date lastModified, Date createdDate, Long enabled) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		LastModified = lastModified;
+		this.createdDate = createdDate;
+		this.enabled = enabled;
+	}
+
+	public User() {
 	}
 
 }

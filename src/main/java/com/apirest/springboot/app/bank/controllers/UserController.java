@@ -8,17 +8,30 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apirest.springboot.app.bank.exception.MessageException;
 import com.apirest.springboot.app.bank.model.entity.User;
 import com.apirest.springboot.app.bank.model.service.UserServiceInterface;
+import com.apirest.springboot.app.bank.security.MyUserDetailsService;
+import com.apirest.springboot.app.bank.security.models.AuthenticationRequest;
+import com.apirest.springboot.app.bank.security.models.AuthenticationResponse;
+import com.apirest.springboot.app.bank.security.util.JwtUtil;
 
 @RestController
 public class UserController {
@@ -26,10 +39,42 @@ public class UserController {
 	@Autowired
 	private UserServiceInterface userService;
 	
+	@Autowired
+	private AuthenticationManager authenticationManager;
+
+	@Autowired
+	private JwtUtil jwtTokenUtil;
+
+	@Autowired
+	private MyUserDetailsService userDetailsService;
+	
+	
+	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
+	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+
+		try {
+			authenticationManager.authenticate(
+					new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+			);
+		}
+		catch (BadCredentialsException e) {
+			logger.info("El usuario "+ authenticationRequest.getUsername() + " no tiene acceso a la API" );
+			throw new Exception("Incorrect username or password", e);
+		}
+
+
+		final UserDetails userDetails = userDetailsService
+				.loadUserByUsername(authenticationRequest.getUsername());
+
+		final String jwt = jwtTokenUtil.generateToken(userDetails);
+		logger.info("El usuario "+ authenticationRequest.getUsername() + " puede utilizar la api con el token " + jwt );
+		return ResponseEntity.ok(new AuthenticationResponse(jwt));
+	}
+	
 	@GetMapping("/usuarios")
 	public List<User> obtenerUsuarios() {
 		List<User> resultado = userService.listAll();
-		logger.debug("Se listarán todos los usuarios");
+		logger.info("Se listarán todos los usuarios");
 		return resultado;
 		
 	}
@@ -37,13 +82,14 @@ public class UserController {
 	@GetMapping("/usuarios/{email}")
 	public User obtenerUsuarioPorEmail(@PathVariable String email) {
 		User resultado = userService.findForEmail(email);
-		logger.debug("Se realizó una busqueda por mail entre todos los usuarios");
+		logger.info("Se realizó una busqueda por mail entre todos los usuarios");
 		return resultado;	
 	}
 	
 	@PostMapping("/usuario")
 	public User addUser(HttpServletResponse response, @RequestBody User user){
 		if(!this.isValidEmail(user.getEmail())) {
+			
 			throw new MessageException("Mail Invalido!" );
 		}
 		
@@ -58,7 +104,7 @@ public class UserController {
 		user.setLastModified(new Date());
 		user.setEnabled((long) 1);
 		User result = this.userService.save(user);
-		logger.debug("Se agregó el usuario" + user.getEmail());
+		logger.info("Se agregó el usuario" + user.getEmail());
 		return result;
 	}
 	
@@ -83,14 +129,14 @@ public class UserController {
 			userToMod = checkChangesToModify(userToMod,user);
 		userToMod.setLastModified(new Date());
 		User result = this.userService.modify(userToMod);
-		logger.debug("Se modificó el usuario" + user.getEmail());
+		logger.info("Se modificó el usuario" + user.getEmail());
 		return result;
 	}
 	
 	@DeleteMapping("/usuario")
 	public void deleteUser(@RequestBody User user) {
 		this.userService.delete(user);
-		logger.debug("Se eliminó el usuario" + user.getEmail());
+		logger.info("Se eliminó el usuario" + user.getEmail());
 	}
 	
 	public User checkChangesToModify(User userToMod, User user) {
@@ -110,6 +156,13 @@ public class UserController {
 			userToMod.setPhones(user.getPhones());
 	
 		return userToMod;
+	}
+	
+	@EventListener(ApplicationReadyEvent.class)
+	private void addUserAdmin(){
+		User user = new User("admin", "admin@gmail.com" ,"admin", new Date(), new Date(), (long) 1);
+		User result = this.userService.save(user);
+		logger.info("Se agregó el usuario " + user.getEmail());
 	}
 	
 }
