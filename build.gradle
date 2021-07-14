@@ -36,8 +36,8 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	runtimeOnly 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testImplementation 'org.spockframework:spock-core:2.0-M2-groovy-3.0'
-	testImplementation 'org.codehaus.groovy:groovy-all:3.0.8'
+	testImplementation 'org.spockframework:spock-core:2.0-M3-groovy-3.0'
+	testImplementation 'org.codehaus.groovy:groovy-all:3.0.3'
 //	testImplementation 'org.spockframework:spock-core:1.0-groovy-2.4'
 //	testImplementation 'org.codehaus.groovy:groovy-all:2.4.7'
 
