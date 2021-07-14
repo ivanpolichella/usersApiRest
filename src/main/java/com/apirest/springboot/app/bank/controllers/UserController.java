@@ -126,18 +126,24 @@ public class UserController {
 	@PutMapping("/usuario")
 	public User modifyUser(@RequestBody User user) {
 		User userToMod = userService.findById(user.getId());
-		if (userToMod != null)
+		if (userToMod != null) {
 			userToMod = checkChangesToModify(userToMod,user);
-		userToMod.setLastModified(new Date());
-		User result = this.userService.modify(userToMod);
-		logger.info("Se modificó el usuario" + user.getEmail());
-		return result;
+			userToMod.setLastModified(new Date());
+			User result = this.userService.modify(userToMod);
+			logger.info("Se modificó el usuario" + user.getEmail());
+			return result;
+		}else
+			throw new MessageException("No existe el usuario enviado en el body, recuerde que la busqueda se realiza por ID");
 	}
 	
 	@DeleteMapping("/usuario")
 	public void deleteUser(@RequestBody User user) {
-		this.userService.delete(user);
-		logger.info("Se eliminó el usuario" + user.getEmail());
+		User userToDel = userService.findById(user.getId());
+		if (userToDel != null) {
+			this.userService.delete(user);
+			logger.info("Se eliminó el usuario" + user.getEmail());
+		}else
+			throw new MessageException("No existe el usuario que se desea eliminar, recuerde que la eliminacion se realiza por ID como campo en el body");
 	}
 	
 	public User checkChangesToModify(User userToMod, User user) {
