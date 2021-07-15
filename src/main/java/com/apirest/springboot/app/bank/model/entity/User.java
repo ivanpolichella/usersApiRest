@@ -30,7 +30,7 @@ public class User {
 	
 	@Column(name = "last_modified")
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date LastModified;
+	private Date lastModified;
 	
 	@Column(name = "created_date")
 	@Temporal(TemporalType.TIMESTAMP)
@@ -88,10 +88,10 @@ public class User {
 		this.id = id;
 	}
 	public Date getLastModified() {
-		return LastModified;
+		return this.lastModified;
 	}
 	public void setLastModified(Date lastModified) {
-		LastModified = lastModified;
+		this.lastModified = lastModified;
 	}
 	public Long getEnabled() {
 		return enabled;
@@ -113,7 +113,7 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		LastModified = lastModified;
+		lastModified = lastModified;
 		this.createdDate = createdDate;
 		this.lastLogin = lastLogin;
 		this.enabled = enabled;
