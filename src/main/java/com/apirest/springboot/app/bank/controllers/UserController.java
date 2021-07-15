@@ -59,7 +59,7 @@ public class UserController {
 			);
 		}
 		catch (BadCredentialsException e) {
-			logger.info("El usuario "+ authenticationRequest.getUsername() + " no tiene acceso a la API" );
+			logger.info("No se pudo autenticar al usuario:  "+ authenticationRequest.getUsername());
 			throw new Exception("Incorrect username or password", e);
 		}
 
@@ -68,16 +68,24 @@ public class UserController {
 				.loadUserByUsername(authenticationRequest.getUsername());
 
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
-		logger.info("El usuario "+ authenticationRequest.getUsername() + " puede utilizar la api con el token " + jwt );
+		logger.info("El usuario "+ authenticationRequest.getUsername() + " se logeo correctamente, genero el token " + jwt );
+		//Se actualiza la fecha de ultimo login
+		actualizarLoginUsuario(authenticationRequest.getUsername());
 		return ResponseEntity.ok(new AuthenticationResponse(jwt));
 	}
 	
+	private void actualizarLoginUsuario(String username) {
+		User user = this.userService.findForEmail(username);
+		user.setLastLogin(new Date());
+		this.userService.modify(user);
+		logger.info("Usuario: "+ username + "LastLogin: " + user.getLastLogin());
+	}
+
 	@GetMapping("/usuarios")
 	public List<User> obtenerUsuarios() {
 		List<User> resultado = userService.listAll();
 		logger.info("Se listarán todos los usuarios");
 		return resultado;
-		
 	}
 	
 	@GetMapping("/usuarios/{email}")
@@ -103,6 +111,7 @@ public class UserController {
 		
 		user.setCreatedDate(new Date());
 		user.setLastModified(new Date());
+		user.setLastLogin(new Date());
 		user.setEnabled((long) 1);
 		User result = this.userService.save(user);
 		logger.info("Se agregó el usuario" + user.getEmail());
@@ -167,9 +176,9 @@ public class UserController {
 	
 	@EventListener(ApplicationReadyEvent.class)
 	private void addUserAdmin(){
-		User user = new User("admin", "admin@gmail.com" ,"admin", new Date(), new Date(), (long) 1);
-		User result = this.userService.save(user);
-		logger.info("Se agregó el usuario " + user.getEmail());
+		User user = new User("admin", "admin@gmail.com" ,"admin", new Date(), new Date(),new Date(), (long) 1);
+		this.userService.save(user);
+		logger.info("Se inicializa la aplicacion con el usuario " + user.getEmail() + "Password: admin");
 	}
 	
 }

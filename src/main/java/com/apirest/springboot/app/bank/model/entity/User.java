@@ -1,6 +1,4 @@
 package com.apirest.springboot.app.bank.model.entity;
-
-import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -37,6 +35,11 @@ public class User {
 	@Column(name = "created_date")
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date createdDate;
+	
+	@Column(name = "last_login")
+	@Temporal(TemporalType.TIMESTAMP)
+	private Date lastLogin;
+
 	private Long enabled;
 	
 	public void addPhone(Phone phone) {
@@ -97,13 +100,22 @@ public class User {
 		this.enabled = enabled;
 	}
 	
-	public User(String name, String email, String password, Date lastModified, Date createdDate, Long enabled) {
+	public Date getLastLogin() {
+		return lastLogin;
+	}
+
+	public void setLastLogin(Date lastLogin) {
+		this.lastLogin = lastLogin;
+	}
+	
+	public User(String name, String email, String password, Date lastModified, Date createdDate,Date lastLogin, Long enabled) {
 		super();
 		this.name = name;
 		this.email = email;
 		this.password = password;
 		LastModified = lastModified;
 		this.createdDate = createdDate;
+		this.lastLogin = lastLogin;
 		this.enabled = enabled;
 	}
 
