@@ -6,4 +6,4 @@
 # *Diagrama De Secuencia del request POST /usuario*
 ![POST usuario Sequence Diagram](https://user-images.githubusercontent.com/18076074/125970926-847a2f3a-29e3-4496-a44c-cf073852570c.png)
 # *Contacto*
-* "Ivan Andres Polichella Brieba" <ivan_pb_bsso@hotmail.com>
+*"Ivan Andres Polichella Brieba" <ivan_pb_bsso@hotmail.com>*
