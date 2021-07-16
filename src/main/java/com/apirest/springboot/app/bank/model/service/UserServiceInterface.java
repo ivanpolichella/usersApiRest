@@ -3,6 +3,7 @@ package com.apirest.springboot.app.bank.model.service;
 import java.util.List;
 import java.util.UUID;
 
+import com.apirest.springboot.app.bank.model.dto.UserDto;
 import com.apirest.springboot.app.bank.model.entity.User;
 
 public interface UserServiceInterface {

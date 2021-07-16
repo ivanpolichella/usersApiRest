@@ -22,8 +22,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.web.client.RestTemplate
 import spock.lang.Specification
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-@ContextConfiguration(classes = TestConfig.class)
+@SpringBootTest(webEnvironment=SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserTest extends Specification {
 	
 	private String jwtToken;
@@ -31,6 +30,8 @@ class UserTest extends Specification {
 	private HttpHeaders headers;
 	
 	private TestRestTemplate restTemplate;
+	
+	private TestRestTemplate testRestTemplate;
 	
 	//Funcion que se ejecuta para cada request de prueba.
 	def setup() {

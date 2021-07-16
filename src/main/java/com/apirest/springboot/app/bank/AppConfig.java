@@ -1,5 +1,6 @@
 package com.apirest.springboot.app.bank;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -25,6 +26,16 @@ public class AppConfig {
     @Bean("clienteRest")
 	public RestTemplate registrarRestTemplate() {
 		return new RestTemplate();	
+	}
+    
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
+    }
+    
+    @Bean
+	public RestTemplate getRestTemplate() {
+		return new RestTemplate();
 	}
 
 }

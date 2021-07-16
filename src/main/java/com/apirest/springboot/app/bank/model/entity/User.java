@@ -113,7 +113,7 @@ public class User {
 		this.name = name;
 		this.email = email;
 		this.password = password;
-		lastModified = lastModified;
+		this.lastModified = lastModified;
 		this.createdDate = createdDate;
 		this.lastLogin = lastLogin;
 		this.enabled = enabled;
