@@ -132,7 +132,7 @@ public class UserController {
 		return ( this.userService.findForEmail(email) != null );
 	}
 
-	public boolean isValidEmail(String email) {
+	private boolean isValidEmail(String email) {
 		   String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
 		   return email.matches(regex);
 	}
