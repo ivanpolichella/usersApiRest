@@ -1,7 +1,7 @@
 # usersApiRest
 * Se debe descargar el proyecto y usar los comandos
-# * *gradle tasks*
-# * *gradle bootRun*
+* *gradle tasks*
+* *gradle bootRun*
 en una consola, powershell o git bash para construir el proyecto con gradle e iniciarlo
 * Deje una collection en la carpeta "postmanCollection" para realizar los distintos request.
 * Diagrama De Secuencia del request POST /usuario
