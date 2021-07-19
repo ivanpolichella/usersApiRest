@@ -94,7 +94,7 @@ class UserTest extends Specification {
 		def response = responseEntity
 
 		then: "Se debe retornar status OK y los datos de respuesta"
-		response.statusCode == HttpStatus.OK
+		response.statusCode == HttpStatus.CREATED
 		response.body.id != null
 		response.body.createdDate != null
 		response.body.lastModified != null

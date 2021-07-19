@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.apirest.springboot.app.bank.exception.MessageException;
@@ -83,6 +85,7 @@ public class UserController {
 	}
 
 	@GetMapping("/usuarios")
+	@ResponseStatus(HttpStatus.OK)
 	public List<UserDto> obtenerUsuarios() {
 		List<User> usuarios = userService.listAll();
 		logger.info("Se listarán todos los usuarios");
@@ -93,6 +96,7 @@ public class UserController {
 	}
 	
 	@GetMapping("/usuarios/{email}")
+	@ResponseStatus(HttpStatus.OK)
 	public UserDto obtenerUsuarioPorEmail(@PathVariable String email) {
 		UserDto resultado = Mapper.convertToDto(userService.findForEmail(email));
 		logger.info("Se realizó una busqueda por mail entre todos los usuarios");
@@ -100,6 +104,7 @@ public class UserController {
 	}
 	
 	@PostMapping("/usuario")
+	@ResponseStatus(HttpStatus.CREATED)
 	public UserDto addUser(HttpServletResponse response, @RequestBody UserDto userDto){
 		if(!this.isValidEmail(userDto.getEmail())) {
 			
@@ -138,6 +143,7 @@ public class UserController {
 	}
 	
 	@PutMapping("/usuario")
+	@ResponseStatus(HttpStatus.CREATED)
 	public UserDto modifyUser(@RequestBody UserDto userDto) {
 		User userToMod = userService.findById(userDto.getId());
 		if (userToMod != null) {
@@ -151,6 +157,7 @@ public class UserController {
 	}
 	
 	@DeleteMapping("/usuario")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUser(@RequestBody UserDto userDto) {
 		User userToDel = userService.findById(userDto.getId());
 		if (userToDel != null) {
